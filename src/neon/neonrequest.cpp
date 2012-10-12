@@ -3,6 +3,7 @@
 #include <glibmm/error.h>
 #include <glibmm/quark.h>
 #include <cstring>
+#include <libs/time_utils.h>
 
 namespace Davix {
 
@@ -59,7 +60,7 @@ void NEONRequest::provide_clicert_fn(void *userdata, ne_session *sess,
 
     NEONRequest* req = (NEONRequest*) userdata;
     davix_log_debug("NEONRequest > clicert callback ");
-    if( req->params.call == NULL){
+    if( req->params.getAuthentificationCallbackFunction() == NULL){
         davix_log_debug("NEONRequest : No credential specified, cancel authentification");
         return;
     }else{
@@ -75,16 +76,17 @@ int NEONRequest::provide_login_passwd_fn(void *userdata, const char *realm, int 
      davix_log_debug("NEONRequest > Try to get auth/password authentification ");
      davix_auth_info_t auth_info;
     // memset(&auth_info,0,sizeof(davix_auth_info_t));
+     davix_auth_callback auth_call = req->params.getAuthentificationCallbackFunction();
      auth_info.auth = DAVIX_LOGIN_PASSWORD;
      GError* tmp_err=NULL;
 
-     if( req->params.call == NULL){
+     if(auth_call  == NULL){
          davix_log_debug("NEONRequest : No credential specified, cancel login/password authentification");
          return -1;
      }
 
      davix_log_debug("NEONRequest > call authentification callback ");
-     int ret = req->params.call((davix_auth_t) static_cast<Request*>(req), &auth_info, req->params.userdata, &tmp_err); // try to get authentification
+     int ret = auth_call((davix_auth_t) static_cast<Request*>(req), &auth_info, req->params.getAuthentificationCallbackData(), &tmp_err); // try to get authentification
      davix_log_debug("NEONRequest > return from authentification callback ");
      if(ret != 0){
              throw Glib::Error(tmp_err);
@@ -147,19 +149,19 @@ void NEONRequest::create_req(){
 }
 
 void NEONRequest::configure_sess(){
-    if(params.ssl_check == false){ // configure ssl check
+    if(params.getSSLCACheck() == false){ // configure ssl check
         davix_log_debug("NEONRequest : disable ssl verification");
         ne_ssl_set_verify(_sess, validate_all_certificate, NULL);
     }
 
-    if(params.ops_timeout != 0){
-        davix_log_debug("NEONRequest : define operation timeout to %d", params.ops_timeout);
-        ne_set_read_timeout(_sess, (int) params.ops_timeout);
+    if( timespec_isset(params.getOperationTimeout())){
+        davix_log_debug("NEONRequest : define operation timeout to %d", params.getOperationTimeout());
+        ne_set_read_timeout(_sess, (int) params.getOperationTimeout()->tv_sec);
     }
-    if(params.connexion_timeout){
-        davix_log_debug("NEONRequest : define connexion timeout to %d", params.connexion_timeout);
+    if(timespec_isset(params.getConnexionTimeout())){
+        davix_log_debug("NEONRequest : define connexion timeout to %d", params.getConnexionTimeout());
 #ifndef _NEON_VERSION_0_25
-        ne_set_connect_timeout(_sess, (int) params.connexion_timeout);
+        ne_set_connect_timeout(_sess, (int) params.getConnexionTimeout()->tv_sec);
 #endif
     }
 }
@@ -332,10 +334,12 @@ int NEONRequest::try_pkcs12_authentification(ne_session *sess, const ne_ssl_dnam
     davix_auth_info_t auth_info;
     memset(&auth_info,0,sizeof(davix_auth_info_t));
     auth_info.auth = DAVIX_CLI_CERT_PKCS12;
+    davix_auth_callback call = params.getAuthentificationCallbackFunction();
     GError* tmp_err=NULL;
+
     davix_log_debug("NEONRequest > call authentification callback ");
 
-    int ret = params.call((davix_auth_t) static_cast<Request*>(this), &auth_info, params.userdata, &tmp_err); // try to get authentification
+    int ret = call((davix_auth_t) static_cast<Request*>(this), &auth_info, params.getAuthentificationCallbackData(), &tmp_err); // try to get authentification
     davix_log_debug("NEONRequest > return from authentification callback ");
     if(ret != 0)
             throw Glib::Error(tmp_err);

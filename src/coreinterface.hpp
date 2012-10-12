@@ -12,7 +12,7 @@
 #include <davix.h>
 #include <httprequest.hpp>
 
-#include <libdavix_object.hpp>
+
 #include <abstractsessionfactory.hpp>
 
 
@@ -21,7 +21,7 @@ namespace Davix {
 
 
 
-class CoreInterface: public Object
+class CoreInterface
 {
 public:
     CoreInterface();

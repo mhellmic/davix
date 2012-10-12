@@ -1,6 +1,6 @@
 #include "core.hpp"
 #include <http_backend.hpp>
-#include <requestparams.hpp>
+#include <davixrequestparams.hpp>
 #include <glibmm.h>
 #include <glib.h>
 

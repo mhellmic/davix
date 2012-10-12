@@ -3,13 +3,12 @@
 
 #include "global_def.hpp"
 #include "request.hpp"
-#include "libdavix_object.hpp"
-#include "requestparams.hpp"
+#include <davixrequestparams.hpp>
 
 namespace Davix{
 
 
-class AbstractSessionFactory : public Davix::Object
+class AbstractSessionFactory
 {
 public:
 

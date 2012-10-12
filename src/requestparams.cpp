@@ -1,13 +1,18 @@
-#include "requestparams.hpp"
+#include <davixrequestparams.hpp>
+#include <libs/time_utils.h>
+
 
 namespace Davix {
 
 RequestParams::RequestParams()
 {
-    connexion_timeout = DAVIX_DEFAULT_CONN_TIMEOUT;
-    ops_timeout = DAVIX_DEFAULT_OPS_TIMEOUT;
+    timespec_clear(&connexion_timeout);
+    timespec_clear(&ops_timeout);
+    connexion_timeout.tv_sec = DAVIX_DEFAULT_CONN_TIMEOUT;
+    ops_timeout.tv_sec = DAVIX_DEFAULT_OPS_TIMEOUT;
     call =NULL;
     userdata = NULL;
+    _redirection = true;
 }
 
 RequestParams::RequestParams(const RequestParams& params){
@@ -22,10 +27,6 @@ RequestParams::~RequestParams(){
 
 }
 
-//
-void RequestParams::setSSLCAcheck(bool chk){
-    ssl_check = chk;
-}
 
 //
 void RequestParams::setAuthentificationCallback(void * _userdata, davix_auth_callback _call){
@@ -33,14 +34,39 @@ void RequestParams::setAuthentificationCallback(void * _userdata, davix_auth_cal
     userdata = _userdata;
 }
 
-//
-void RequestParams::setConnexionTimeout(unsigned long timeout){ // throw nothing
-    connexion_timeout = timeout;
+
+davix_auth_callback RequestParams::getAuthentificationCallbackFunction(){
+    return call;
 }
 
-//
-void RequestParams::setOperationTimeout(unsigned long timeout){ // throw nothing
-    ops_timeout = timeout;
+void* RequestParams::getAuthentificationCallbackData(){
+    return userdata;
+}
+
+
+void RequestParams::setConnexionTimeout(struct timespec *conn_timeout1){
+    timespec_copy(&(this->connexion_timeout),conn_timeout1);
+}
+
+void RequestParams::setOperationTimeout(struct timespec *ops_timeout1){
+    timespec_copy(&(this->ops_timeout), ops_timeout1);
+}
+
+const struct timespec* RequestParams::getConnexionTimeout() const {
+    return &connexion_timeout;
+}
+
+const struct timespec* RequestParams::getOperationTimeout() const {
+    return &ops_timeout;
+}
+
+void RequestParams::setTransparentRedirectionSupport(bool redirection){
+    this->_redirection = redirection;
+}
+
+
+bool RequestParams::getTransparentRedirectionSupport() const{
+    return this->_redirection;
 }
 
 

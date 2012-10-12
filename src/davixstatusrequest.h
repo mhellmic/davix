@@ -26,10 +26,8 @@ enum Code{
 
 }
 
-class StatusRequest
-{
+class StatusOperation{
 public:
-    StatusRequest(Context* context, NGQRequest* request);
 
     inline StatusCode::Code getStatus() const{
         return code;
@@ -40,10 +38,22 @@ public:
     }
 
 protected:
-    Context* context;
-    NGQRequest* parent_request;
     StatusCode::Code code;
     std::string err_msg;
+};
+
+class StatusRequest : public StatusOperation
+{
+public:
+    StatusRequest(Context* context, NGQRequest* request);
+    virtual ~StatusRequest(){}
+
+
+
+protected:
+    Context* context;
+    NGQRequest* parent_request;
+
 };
 
 } // namespace Davix
