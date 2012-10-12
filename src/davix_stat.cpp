@@ -46,10 +46,10 @@ void Davix::Core::stat(const std::string & url, struct stat* st){
 */
 const std::vector<char> & Davix::req_webdav_propfind(HttpRequest* req){
     int errno_err, error = 404;
-    req->add_header_field("Depth","0");
-    req->set_requestcustom("PROPFIND");
+    req->addHeaderField("Depth","0");
+    req->setRequestMethod("PROPFIND");
     (void) req->execute_sync();
-     error = req->get_request_code();
+     error = req->getRequestCode();
     if( (errno_err = httpcode_to_errno(error)) != 0){
         std::ostringstream os;
         os << " Error Webdav propfind : " << strerror(errno_err) << ", http errcode " << error << std::endl;

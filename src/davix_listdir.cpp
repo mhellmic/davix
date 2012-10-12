@@ -50,8 +50,8 @@ int incremental_propfind_listdir_parsing(HttpRequest* req, WebdavPropParser * pa
 
 
 void configure_req_for_listdir(HttpRequest* req){
-    req->add_header_field("Depth","1");
-    req->set_requestcustom("PROPFIND");
+    req->addHeaderField("Depth","1");
+    req->setRequestMethod("PROPFIND");
 }
 
 DAVIX_DIR* Core::internal_opendirpp(const char * scope, const std::string & body, const std::string & url  ){
@@ -74,7 +74,7 @@ DAVIX_DIR* Core::internal_opendirpp(const char * scope, const std::string & body
 
         req->execute_block(); // start req
 
-        error= req->get_request_code(); // get errcode and test request validity
+        error= req->getRequestCode(); // get errcode and test request validity
        if( (errno_err = httpcode_to_errno(error)) != 0){
            std::ostringstream os;
            os << " Error Webdav propfind : " << strerror(errno_err) << ", http errcode " << error << std::endl;

@@ -14,11 +14,11 @@ void Core::mkdir(const std::string &url, mode_t right){
         WebdavPropParser parser;
         std::auto_ptr<HttpRequest> req( static_cast<HttpRequest*>(_fsess->create_request(url)));
 
-        req->set_requestcustom("MKCOL");
+        req->setRequestMethod("MKCOL");
 
         req->execute_sync();
 
-        error= req->get_request_code(); // get errcode and test request validity
+        error= req->getRequestCode(); // get errcode and test request validity
         if( (errno_err = httpcode_to_errno(error)) != 0){
            std::ostringstream os;
            os << " Error Webdav propfind : " << strerror(errno_err) << ", http errcode " << error << std::endl;

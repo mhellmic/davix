@@ -188,7 +188,7 @@ void NEONRequest::negotiate_request(){
             throw Glib::Error(Glib::Quark("NEONRequest::negotiate_request"), err_code, std::string("Request error : ").append(err_str));
         }
 
-        code = get_request_code();
+        code = getRequestCode();
         switch(code){
             case 401: // authentification requested, do retry
                 ne_discard_response(_req);
@@ -213,11 +213,11 @@ void NEONRequest::negotiate_request(){
     davix_log_debug(" ->   NEON end internal request ... ");
 }
 
-void NEONRequest::set_requestcustom(const std::string &request_str){
+void NEONRequest::setRequestMethod(const std::string &request_str){
     _request_type = request_str;
 }
 
-void NEONRequest::add_header_field(const std::string &field, const std::string &value){
+void NEONRequest::addHeaderField(const std::string &field, const std::string &value){
     _headers_field.push_back(std::pair<std::string, std::string> (field, value));
 }
 
@@ -291,9 +291,9 @@ void NEONRequest::clear_result(){
 
 
 
-int NEONRequest::get_request_code(){
+int NEONRequest::getRequestCode(){
     if(_req == NULL)
-        throw Glib::Error(Glib::Quark("NEONRequest::get_request_code"), EINVAL, "No request started and try to get req code ..");
+        throw Glib::Error(Glib::Quark("NEONRequest::getRequestCode"), EINVAL, "No request started and try to get req code ..");
     return ne_get_status(_req)->code;
 }
 
