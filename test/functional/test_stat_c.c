@@ -54,7 +54,7 @@ int main(int argc, char** argv){
         davix_params_t p = davix_params_new();
         davix_params_set_auth_callback(p, mycred_auth_callback, argv[2], &tmp_err);
         davix_params_set_ssl_check(p, FALSE, &tmp_err);
-        davix_set_default_session_params(ctxt, p, NULL);
+      //  davix_set_default_session_params(ctxt, p, NULL);
         davix_params_free(p);
     }
 

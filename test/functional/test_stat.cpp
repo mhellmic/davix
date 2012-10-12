@@ -39,9 +39,8 @@ int mycred_auth_callback(davix_auth_t token, const davix_auth_info_t* t, void* u
 
 
 static void configure_grid_env(char * cert_path, RequestParams&  p){
-    RequestParams params;
-    params.setSSLCAcheck(false);
-    params.setAuthentificationCallback(cert_path, &mycred_auth_callback);
+    p.setSSLCAcheck(false);
+    p.setAuthentificationCallback(cert_path, &mycred_auth_callback);
 }
 
 int main(int argc, char** argv){
@@ -65,7 +64,7 @@ int main(int argc, char** argv){
 
 
         struct stat st;
-        pos.stat(argv[1], &st);
+        pos.stat(&p, argv[1], &st);
 
         std::cout << "stat success" << std::endl;
         std::cout << " atime : " << st.st_atime << std::endl;

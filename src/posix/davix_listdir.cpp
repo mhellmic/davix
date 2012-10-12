@@ -54,10 +54,12 @@ void configure_req_for_listdir(HttpRequest* req){
     req->setRequestMethod("PROPFIND");
 }
 
-DAVIX_DIR* DavPosix::internal_opendirpp(const char * scope, const std::string & body, const std::string & url  ){
+DAVIX_DIR* DavPosix::internal_opendirpp(const RequestParams* _params, const char * scope, const std::string & body, const std::string & url  ){
     size_t s_resu;
     int errno_err, error;
     DAVIX_DIR* r = NULL;
+    RequestParams params(_params);
+
     try{
 
 
@@ -68,6 +70,7 @@ DAVIX_DIR* DavPosix::internal_opendirpp(const char * scope, const std::string & 
         time_t timestamp_timeout = time(NULL) + _timeout;
 
         HttpRequest *req = res->request;
+        req->set_parameters(params);
         WebdavPropParser* parser = res->parser;
         // setup the handle for simple listing only
         req->add_full_request_content(body);
@@ -107,19 +110,19 @@ DAVIX_DIR* DavPosix::internal_opendirpp(const char * scope, const std::string & 
 }
 
 
-DAVIX_DIR* DavPosix::opendir(const std::string &url){
+DAVIX_DIR* DavPosix::opendir(const RequestParams* params, const std::string &url){
 
     davix_log_debug(" -> davix_opendir");
-    DAVIX_DIR* r = internal_opendirpp("Core::opendir",simple_listing, url);
+    DAVIX_DIR* r = internal_opendirpp(params, "Core::opendir",simple_listing, url);
 
     davix_log_debug(" <- davix_opendir");
     return (DAVIX_DIR*) r;
 }
 
-DAVIX_DIR* DavPosix::opendirpp(const std::string &url){
+DAVIX_DIR* DavPosix::opendirpp(const RequestParams* params, const std::string &url){
 
     davix_log_debug(" -> davix_opendirpp");
-    DAVIX_DIR* r = internal_opendirpp("Core::opendir",stat_listing, url);
+    DAVIX_DIR* r = internal_opendirpp(params, "Core::opendir",stat_listing, url);
 
     davix_log_debug(" <- davix_opendirpp");
     return (DAVIX_DIR*) r;

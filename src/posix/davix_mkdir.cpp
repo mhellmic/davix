@@ -6,13 +6,15 @@
 
 namespace Davix{
 
-void DavPosix::mkdir(const std::string &url, mode_t right){
+void DavPosix::mkdir(const RequestParams * _params, const std::string &url, mode_t right){
     davix_log_debug(" -> davix_mkdir");
     int error, errno_err;
+    RequestParams params(_params);
 
     try{
         WebdavPropParser parser;
         std::auto_ptr<HttpRequest> req( static_cast<HttpRequest*>(context->_intern->getSessionFactory()->create_request(url)));
+        req->set_parameters(params);
 
         req->setRequestMethod("MKCOL");
 

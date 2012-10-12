@@ -13,6 +13,8 @@ class RequestParams
 public:
     RequestParams();
     RequestParams(const RequestParams & params);
+    RequestParams(const RequestParams* params);
+
 
     virtual ~RequestParams();
 
@@ -55,7 +57,7 @@ public:
 
     bool getTransparentRedirectionSupport() const;
 
-protected:
+private:
     struct timespec ops_timeout;
     struct timespec connexion_timeout;
     bool ssl_check;
@@ -65,6 +67,8 @@ protected:
     davix_auth_callback call;
     void* userdata;
 
+    //
+    void _init();
     // dptr
 };
 

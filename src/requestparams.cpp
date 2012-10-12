@@ -6,6 +6,33 @@ namespace Davix {
 
 RequestParams::RequestParams()
 {
+    _init();
+}
+
+RequestParams::RequestParams(const RequestParams& params){
+    call = params.call;
+    userdata = params.userdata;
+    timespec_copy(&(connexion_timeout), &(params.connexion_timeout));
+    timespec_copy(&(ops_timeout), &(params.ops_timeout));
+    _redirection = params._redirection;
+}
+
+RequestParams::~RequestParams(){
+
+}
+
+RequestParams::RequestParams(const RequestParams* params){
+    if(params){
+        *this = *params;
+    }else{
+        _init();
+    }
+}
+
+
+
+
+void RequestParams::_init(){
     timespec_clear(&connexion_timeout);
     timespec_clear(&ops_timeout);
     connexion_timeout.tv_sec = DAVIX_DEFAULT_CONN_TIMEOUT;
@@ -13,18 +40,6 @@ RequestParams::RequestParams()
     call =NULL;
     userdata = NULL;
     _redirection = true;
-}
-
-RequestParams::RequestParams(const RequestParams& params){
-    call = params.call;
-    userdata = params.userdata;
-    connexion_timeout = params.connexion_timeout;
-    ops_timeout = params.ops_timeout;
-
-}
-
-RequestParams::~RequestParams(){
-
 }
 
 

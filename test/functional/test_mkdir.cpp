@@ -43,9 +43,8 @@ int mycred_auth_callback(davix_auth_t token, const davix_auth_info_t* t, void* u
 
 
 static void configure_grid_env(char * cert_path, RequestParams&  p){
-    RequestParams params;
-    params.setSSLCAcheck(false);
-    params.setAuthentificationCallback(cert_path, &mycred_auth_callback);
+    p.setSSLCAcheck(false);
+    p.setAuthentificationCallback(cert_path, &mycred_auth_callback);
 }
 
 int main(int argc, char** argv){
@@ -72,7 +71,7 @@ int main(int argc, char** argv){
         oss << argv[1] << "/"<< (rand()%20000);
         std::string a = oss.str();
 
-        pos.mkdir(a.c_str(), 0777);
+        pos.mkdir(&p, a.c_str(), 0777);
 
         std::cout << "mkdir  success !" << std::endl;
 

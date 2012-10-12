@@ -76,6 +76,8 @@ int davix_params_set_ssl_check(davix_params_t params, gboolean ssl_check, GError
     return ret;
 }
 
+/*
+
 int davix_set_default_session_params(davix_sess_t sess, davix_params_t params, GError ** err){
     g_return_val_if_fail(params != NULL && sess != NULL , -1);
     int ret = -1;
@@ -91,7 +93,7 @@ int davix_set_default_session_params(davix_sess_t sess, davix_params_t params, G
         g_set_error(err, g_quark_from_string("davix_set_auth_callback"), EINVAL, "unexpected error");
     }
     return ret;
-}
+}*/
 
 
 

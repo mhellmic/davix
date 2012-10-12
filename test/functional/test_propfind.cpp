@@ -29,13 +29,14 @@ int main(int argc, char** argv){
 
     g_logger_set_globalfilter(G_LOG_LEVEL_MASK);
     try{
+        RequestParams params;
+
         std::auto_ptr<AbstractSessionFactory> s( new NEONSessionFactory());
         if(argc >2 ){ // setup ops if credential is found
-            RequestParams params;
-            params.setSSLCAcheck(false);
-            s->set_parameters(params);
+             params.setSSLCAcheck(false);
         }
         std::auto_ptr<HttpRequest> r (static_cast<HttpRequest*>(s->create_request(argv[1])));
+        r->set_parameters(params);
 
         std::vector<char> v = req_webdav_propfind(r.get());
         v.push_back('\0');

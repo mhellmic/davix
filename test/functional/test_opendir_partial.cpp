@@ -29,9 +29,8 @@ int mycred_auth_callback(davix_auth_t token, const davix_auth_info_t* t, void* u
 
 
 static void configure_grid_env(char * cert_path, RequestParams&  p){
-    RequestParams params;
-    params.setSSLCAcheck(false);
-    params.setAuthentificationCallback(cert_path, &mycred_auth_callback);
+    p.setSSLCAcheck(false);
+    p.setAuthentificationCallback(cert_path, &mycred_auth_callback);
 }
 
 int main(int argc, char** argv){
@@ -57,7 +56,7 @@ int main(int argc, char** argv){
 
 
 
-        DAVIX_DIR* d = pos.opendir(argv[1]);
+        DAVIX_DIR* d = pos.opendir(&p, argv[1]);
 
         struct dirent * dir = NULL;
         int n= 0;

@@ -43,7 +43,6 @@ Request* NEONSessionFactory::create_request(const std::string &url){
     parse_http_neon_url(url, protocol, host, path, &port);
     ne_session* sess = create_recycled_session(protocol, host, port);
     NEONRequest* req = new NEONRequest(this, sess, path);
-    req->set_parameters(params);
     return static_cast<Request*>(req);
 }
 

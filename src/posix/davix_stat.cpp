@@ -16,12 +16,14 @@ void fill_stat_from_fileproperties(struct stat* st, const  FileProperties & prop
 }
 
 
-void DavPosix::stat(const std::string & url, struct stat* st){
+void DavPosix::stat(const RequestParams * _params, const std::string & url, struct stat* st){
     davix_log_debug(" -> davix_stat");
+    RequestParams params(_params);
 
     try{
         WebdavPropParser parser;
         std::auto_ptr<HttpRequest> req( static_cast<HttpRequest*>(context->_intern->getSessionFactory()->create_request(url)));
+        req->set_parameters(params);
 
         const std::vector<char> & res = req_webdav_propfind(req.get());
         const std::vector<FileProperties> & props = parser.parser_properties_from_memory(std::string(((char*) & res.at(0)), res.size()));
@@ -72,7 +74,7 @@ int davix_stat(davix_sess_t sess, const char* url, struct stat * st, GError** er
     try{
         Davix::DavPosix p(static_cast<Davix::Context*>(sess));
 
-        p.stat(url, st);
+        p.stat(NULL,url, st);
         return 0;
     }catch(Glib::Error & e){
         if(err)

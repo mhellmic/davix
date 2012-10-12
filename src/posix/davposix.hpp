@@ -19,7 +19,7 @@ public:
       @param str: string url
       @param stat : stat struct to fill
      **/
-    void stat(const std::string & str, struct stat *);
+    void stat(const RequestParams* params, const std::string & str, struct stat *);
 
     /**
       @brief execute an opendir function with Webdav
@@ -28,7 +28,7 @@ public:
       @throw : Glib::Error, with a errno code value
       @return
     */
-    DAVIX_DIR* opendir(const std::string & url);
+    DAVIX_DIR* opendir(const RequestParams* params, const std::string & url);
 
     /**
       @brief execute a readdir function with Webdav
@@ -47,7 +47,7 @@ public:
       @throw : Glib::Error, with a errno code value
       @return
     */
-    DAVIX_DIR* opendirpp(const std::string & url);
+    DAVIX_DIR* opendirpp(const RequestParams* params, const std::string & url);
 
 
 
@@ -69,9 +69,9 @@ public:
       @warning dependening of the server, implementation, mode_t parameter can be ignored
 
     */
-    void mkdir(const std::string & url, mode_t right);
+    void mkdir(const RequestParams * _params, const std::string & url, mode_t right);
 protected:
-    DAVIX_DIR* internal_opendirpp(const char * scope, const std::string & body, const std::string & url  );
+    DAVIX_DIR* internal_opendirpp(const RequestParams* params,  const char * scope, const std::string & body, const std::string & url  );
 
     Context* context;
     long _timeout;
