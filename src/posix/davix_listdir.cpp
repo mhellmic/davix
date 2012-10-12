@@ -1,6 +1,9 @@
+#include <sys/stat.h>
+#include <dirent.h>
+
 #include "davix_listdir.hpp"
-#include <global_def.hpp>
-#include <davixcontext.hpp>
+#include <posix/davposix.hpp>
+
 #include <posix/davix_stat.hpp>
 #include <xmlpp/webdavpropparser.hpp>
 

@@ -4,15 +4,6 @@
 #include <glibmm.h>
 #include <glib.h>
 
-namespace Davix{
-//
-// Main entry point
-//
-CoreInterface* davix_context_create(){
-    return static_cast<CoreInterface*>(new Core(new NEONSessionFactory() ));
-}
-
-}
 
 DAVIX_C_DECL_BEGIN
 

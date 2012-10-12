@@ -2,6 +2,7 @@
 
 
 #include <davixcontext.hpp>
+#include <string.h>
 #include <http_backend.hpp>
 #include <glibmm/init.h>
 #include <posix/davposix.hpp>

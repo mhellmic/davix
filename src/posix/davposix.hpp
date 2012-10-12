@@ -2,6 +2,9 @@
 #define DAVIX_DAVPOSIX_HPP
 
 #include <davixcontext.hpp>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <unistd.h>
 
 namespace Davix {
 

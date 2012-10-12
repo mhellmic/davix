@@ -3,7 +3,6 @@
 
 #include <tr1/memory>
 #include <neon/neonsessionfactory.hpp>
-#include <coreinterface.hpp>
 
 namespace Davix {
 
@@ -11,7 +10,7 @@ namespace Davix {
 /**
    Implementation f the core logic in davix
  */
-class ContextInternal : public CoreInterface
+class ContextInternal
 {
 public:
     ContextInternal(AbstractSessionFactory * fsess);

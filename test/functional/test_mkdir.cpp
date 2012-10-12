@@ -8,6 +8,7 @@
 #include <string>
 #include <sstream>
 #include <cmath>
+#include <string.h>
 
 
 using namespace Davix;
