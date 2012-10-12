@@ -14,7 +14,7 @@ class ContextInternal;
 /// @brief Main Entry point for Davix
 /// a Davix context is a independant instance of Davix
 /// Each instance of Davix has its own session-reuse pool and parameters
-class Context : public ContextConfig
+class Context
 {
 public:
     /// create a new context for Davix
@@ -32,11 +32,7 @@ public:
 protected:
     // internal context
     std::tr1::shared_ptr<ContextInternal> _intern;
-    std::auto_ptr<PosixGate> p_gate;
-    std::auto_ptr<HttpGate> h_gate;
     Glib::Mutex mux_gate;
-    friend class PosixGate;
-    friend class httpGate;
     friend class NeonGenericRequest;
 
 };

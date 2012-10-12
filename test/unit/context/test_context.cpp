@@ -1,7 +1,6 @@
 
 
 #include <davixcontext.h>
-#include <posixgate.h>
 #include <gtest/gtest.h>
 
 
