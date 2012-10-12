@@ -1,6 +1,6 @@
 #include "test_stat_session.h"
 
-#include <core.hpp>
+#include <davixcontext.hpp>
 #include <http_backend.hpp>
 #include <glibmm/init.h>
 

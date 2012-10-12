@@ -1,10 +1,12 @@
 #ifndef DAVIX_DAVIXSTATUSREQUEST_H
 #define DAVIX_DAVIXSTATUSREQUEST_H
 
-#include <davixcontext.h>
-#include <davixrequest.h>
+#include <string>
 
 namespace Davix {
+
+class Context;
+class NGQRequest;
 
 namespace StatusCode{
 

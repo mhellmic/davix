@@ -1,6 +1,6 @@
 #include "davix_listdir.hpp"
 #include <global_def.hpp>
-#include <core.hpp>
+#include <davixcontext.hpp>
 #include <davix_stat.hpp>
 #include <xmlpp/webdavpropparser.hpp>
 

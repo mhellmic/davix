@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 
 
-#include "core.hpp"
+#include "davixcontext.hpp"
 #include "abstractsessionfactory.hpp"
 #include "httprequest.hpp"
 #include <xmlpp/webdavpropparser.hpp>

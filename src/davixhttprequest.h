@@ -6,7 +6,7 @@
 #include <davixrequest.h>
 #include <httpstatusrequest.h>
 #include <davix_types.h>
-#include <davixuri.h>
+#include <davixuri.hpp>
 
 namespace Davix {
 

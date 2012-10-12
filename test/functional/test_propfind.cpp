@@ -1,7 +1,7 @@
 #include "test_propfind.h"
 
 
-#include <core.hpp>
+#include <davixcontext.hpp>
 #include <davix_stat.hpp>
 #include <http_backend.hpp>
 

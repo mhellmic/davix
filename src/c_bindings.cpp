@@ -1,4 +1,4 @@
-#include "core.hpp"
+#include "davixcontext.hpp"
 #include <http_backend.hpp>
 #include <davixrequestparams.hpp>
 #include <glibmm.h>

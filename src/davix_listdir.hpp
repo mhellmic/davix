@@ -2,7 +2,7 @@
 #define DAVIX_DAVIX_LISTDIR_H
 
 
-#include <core.hpp>
+#include <davixcontext.hpp>
 
 
 namespace Davix {

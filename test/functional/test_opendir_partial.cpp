@@ -1,7 +1,7 @@
 #include "test_opendir_partial.h"
 
 
-#include <core.hpp>
+#include <davixcontext.hpp>
 #include <http_backend.hpp>
 #include <glibmm/init.h>
 

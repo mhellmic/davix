@@ -3,7 +3,7 @@
 
 #include <tr1/memory>
 #include <contextconfig.h>
-
+#include <contextinternal.h>
 
 namespace Davix{
 
