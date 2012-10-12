@@ -48,7 +48,7 @@ int main(int argc, char** argv){
     int res =-1;
     struct stat st;
 
-    davix_sess_t ctxt = davix_session_new(&tmp_err);
+    davix_sess_t ctxt = davix_context_new(&tmp_err);
 
     if(!tmp_err && argc >=3){
         davix_params_t p = davix_params_new();
@@ -73,7 +73,7 @@ int main(int argc, char** argv){
     }else{
         printf(" error N°%d : %s \n", tmp_err->code, tmp_err->message);
     }
-    davix_session_free(ctxt);
+    davix_context_free(ctxt);
     return res;
 }
 

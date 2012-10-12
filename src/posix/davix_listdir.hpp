@@ -3,12 +3,6 @@
 
 
 #include <davixcontext.hpp>
-
-
-namespace Davix {
-
-
-
-} // namespace Davix
+#include <posix/davposix.hpp>
 
 #endif // DAVIX_DAVIX_LISTDIR_H

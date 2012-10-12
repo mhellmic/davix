@@ -12,6 +12,7 @@
 #include "abstractsessionfactory.hpp"
 #include "httprequest.hpp"
 #include <xmlpp/webdavpropparser.hpp>
+#include <posix/davposix.hpp>
 
 namespace Davix{
 

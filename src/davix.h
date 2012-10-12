@@ -28,7 +28,7 @@ DAVIX_C_DECL_BEGIN
   @param err : Gerror error report system, in case of failure
   @return davix_sess_t : session handle or NULL poitner if error
   */
-davix_sess_t davix_session_new(GError ** err);
+davix_sess_t davix_context_new(GError ** err);
 
 /**
   enable/disable grid mode, grid mode enable GSI/voms usage and credential delegation
@@ -38,7 +38,7 @@ davix_sess_t davix_session_new(GError ** err);
 /**
   release a davix session handle
 */
-void davix_session_free(davix_sess_t sess);
+void davix_context_free(davix_sess_t sess);
 
 
 

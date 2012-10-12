@@ -4,7 +4,9 @@
 #include <xmlpp/webdavpropparser.hpp>
 
 
-void Davix::fill_stat_from_fileproperties(struct stat* st, const  FileProperties & prop){
+namespace Davix{
+
+void fill_stat_from_fileproperties(struct stat* st, const  FileProperties & prop){
     memset(st, 0, sizeof(struct stat));
     st->st_mtime = prop.mtime;
     st->st_atime = prop.atime;
@@ -14,12 +16,12 @@ void Davix::fill_stat_from_fileproperties(struct stat* st, const  FileProperties
 }
 
 
-void Davix::Core::stat(const std::string & url, struct stat* st){
+void DavPosix::stat(const std::string & url, struct stat* st){
     davix_log_debug(" -> davix_stat");
 
     try{
         WebdavPropParser parser;
-        std::auto_ptr<HttpRequest> req( static_cast<HttpRequest*>(_fsess->create_request(url)));
+        std::auto_ptr<HttpRequest> req( static_cast<HttpRequest*>(context->_intern->getSessionFactory()->create_request(url)));
 
         const std::vector<char> & res = req_webdav_propfind(req.get());
         const std::vector<FileProperties> & props = parser.parser_properties_from_memory(std::string(((char*) & res.at(0)), res.size()));
@@ -44,7 +46,7 @@ void Davix::Core::stat(const std::string & url, struct stat* st){
   return a vector with the content of the request if success
   throw Glib::Error if error occures ( 404, etc.. )
 */
-const std::vector<char> & Davix::req_webdav_propfind(HttpRequest* req){
+const std::vector<char> & req_webdav_propfind(HttpRequest* req){
     int errno_err, error = 404;
     req->addHeaderField("Depth","0");
     req->setRequestMethod("PROPFIND");
@@ -57,3 +59,28 @@ const std::vector<char> & Davix::req_webdav_propfind(HttpRequest* req){
     }
     return req->get_result();
 }
+
+
+}
+
+
+DAVIX_C_DECL_BEGIN
+
+int davix_stat(davix_sess_t sess, const char* url, struct stat * st, GError** err){
+    g_return_val_if_fail(sess != NULL,-1);
+
+    try{
+        Davix::DavPosix p(static_cast<Davix::Context*>(sess));
+
+        p.stat(url, st);
+        return 0;
+    }catch(Glib::Error & e){
+        if(err)
+            *err= g_error_copy(e.gobj());
+    }catch(std::exception & e){
+        g_set_error(err, g_quark_from_string("davix_stat"), EINVAL, "unexcepted error %s", e.what());
+    }
+    return -1;
+}
+
+DAVIX_C_DECL_END

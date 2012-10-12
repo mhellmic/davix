@@ -4,6 +4,7 @@
 #include <davixcontext.hpp>
 #include <http_backend.hpp>
 #include <glibmm/init.h>
+#include <posix/davposix.hpp>
 
 using namespace Davix;
 
@@ -40,12 +41,10 @@ int mycred_auth_callback(davix_auth_t token, const davix_auth_info_t* t, void* u
 
 
 
-static void configure_grid_env(char * cert_path, Core  * core){
-    AbstractSessionFactory* f = core->getSessionFactory();
+static void configure_grid_env(char * cert_path, RequestParams&  p){
     RequestParams params;
     params.setSSLCAcheck(false);
     params.setAuthentificationCallback(cert_path, &mycred_auth_callback);
-    f->set_parameters(params);
 }
 
 int main(int argc, char** argv){
@@ -59,24 +58,25 @@ int main(int argc, char** argv){
     g_logger_set_globalfilter(G_LOG_LEVEL_WARNING);
 
     try{
-        std::auto_ptr<Core> c( new Core(new NEONSessionFactory()));
-        c->set_buffer_size(MY_BUFFER_SIZE);
+        RequestParams  p;
+        std::auto_ptr<Context> c( new Context());
+        DavPosix pos(c.get());
         if(argc > 2){
-            configure_grid_env(argv[2], c.get());
+            configure_grid_env(argv[2], p);
         }
 
 
 
-        DAVIX_DIR* d = c->opendir(argv[1]);
+        DAVIX_DIR* d = pos.opendir(argv[1]);
 
         struct dirent * dir = NULL;
         do{
-            dir= c->readdir(d);
+            dir= pos.readdir(d);
             if(dir)
                 std::cout << "N° " << dir->d_off <<" file : " << dir->d_name << std::endl;
         }while(dir!= NULL);
 
-        c->closedir(d);
+        pos.closedir(d);
     }catch(Glib::Error & e){
         std::cout << " error occures : N°" << e.code() << "  " << e.what() << std::endl;
         return -1;

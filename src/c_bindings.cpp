@@ -26,35 +26,20 @@ void core_init(){
 
 
 
-davix_sess_t davix_session_new(GError ** err){
+davix_sess_t davix_context_new(GError ** err){
     try{
-        Davix::CoreInterface* comp = static_cast<Davix::CoreInterface*>(new Davix::Core(new Davix::NEONSessionFactory() ));
+        Davix::Context* comp = new Davix::Context();
         return (davix_sess_t) comp;
     }catch(Glib::Error & e){
         if(err)
             g_error_copy(e.gobj());
     }catch(...){
-        g_set_error(err, g_quark_from_string("davix_session_new"), ENOSYS, "unexpected error");
+        g_set_error(err, g_quark_from_string("davix_context_new"), ENOSYS, "unexpected error");
     }
     return NULL;
 }
 
-int davix_stat(davix_sess_t sess, const char* url, struct stat * st, GError** err){
-    g_return_val_if_fail(sess != NULL,-1);
 
-    try{
-        Davix::CoreInterface* comp = static_cast<Davix::CoreInterface*>(sess);
-
-        comp->stat(url, st);
-        return 0;
-    }catch(Glib::Error & e){
-        if(err)
-            *err= g_error_copy(e.gobj());
-    }catch(std::exception & e){
-        g_set_error(err, g_quark_from_string("davix_stat"), EINVAL, "unexcepted error %s", e.what());
-    }
-    return -1;
-}
 
 
 
@@ -110,9 +95,9 @@ int davix_set_default_session_params(davix_sess_t sess, davix_params_t params, G
 
 
 
-void davix_session_free(davix_sess_t sess){
+void davix_context_free(davix_sess_t sess){
     if(sess != NULL)
-        delete static_cast<Davix::CoreInterface*>(sess);
+        delete (static_cast<Davix::Context*>(sess));
 }
 
 davix_params_t davix_params_new(){

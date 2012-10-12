@@ -28,9 +28,11 @@ public:
     Context* clone();
 
 
-protected:
+private:
     // internal context
     std::tr1::shared_ptr<ContextInternal> _intern;
+
+    friend class DavPosix;
 
 };
 
