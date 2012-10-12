@@ -7,26 +7,14 @@
 
 namespace Davix {
 
-class ContextInternal
-{
-public:
-    ContextInternal();
-
-    NEONSessionFactory* getSessionFactory();
-
-protected:
-
-    std::auto_ptr<NEONSessionFactory>  _fsess;
-};
-
 
 /**
    Implementation f the core logic in davix
  */
-class Core : public CoreInterface
+class ContextInternal : public CoreInterface
 {
 public:
-    Core(AbstractSessionFactory * fsess);
+    ContextInternal(AbstractSessionFactory * fsess);
 
 
     /**
@@ -103,6 +91,8 @@ protected:
     size_t _s_buff;
     unsigned long _timeout;
 };
+
+typedef ContextInternal Core;
 
 } // namespace Davix
 

@@ -32,8 +32,6 @@ public:
 protected:
     // internal context
     std::tr1::shared_ptr<ContextInternal> _intern;
-    Glib::Mutex mux_gate;
-    friend class NeonGenericRequest;
 
 };
 

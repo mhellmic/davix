@@ -6,7 +6,7 @@
 
 namespace Davix{
 
-Context::Context() : _intern(new ContextInternal())
+Context::Context() : _intern(new ContextInternal(new NEONSessionFactory()))
 {
 }
 
@@ -27,7 +27,7 @@ Context* Context::clone(){
 }
 
 
-extern "C"{
+DAVIX_C_DECL_BEGIN
 
 
 int davix_set_pkcs12_auth(davix_auth_t token, const char* filename_pkcs, const char* passwd, GError** err){
@@ -52,4 +52,4 @@ int davix_set_login_passwd_auth(davix_auth_t token, const char* login, const cha
     return 0;
 }
 
-}
+DAVIX_C_DECL_END
