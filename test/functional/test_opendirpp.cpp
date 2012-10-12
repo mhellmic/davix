@@ -42,8 +42,8 @@ int mycred_auth_callback(davix_auth_t token, const davix_auth_info_t* t, void* u
 static void configure_grid_env(char * cert_path, Core  * core){
     AbstractSessionFactory* f = core->getSessionFactory();
     RequestParams params;
-    params.set_ssl_ca_check(false);
-    params.set_authentification_controller(cert_path, &mycred_auth_callback);
+    params.setSSLCAcheck(false);
+    params.setAuthentificationCallback(cert_path, &mycred_auth_callback);
     f->set_parameters(params);
 }
 

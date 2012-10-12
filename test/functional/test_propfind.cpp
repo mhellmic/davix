@@ -32,7 +32,7 @@ int main(int argc, char** argv){
         std::auto_ptr<AbstractSessionFactory> s( new NEONSessionFactory());
         if(argc >2 ){ // setup ops if credential is found
             RequestParams params;
-            params.set_ssl_ca_check(false);
+            params.setSSLCAcheck(false);
             s->set_parameters(params);
         }
         std::auto_ptr<HttpRequest> r (static_cast<HttpRequest*>(s->create_request(argv[1])));

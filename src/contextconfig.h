@@ -18,7 +18,7 @@ public:
 
 
    /// disable the certificate authority validity check for the https request
-   inline void setSSLCACheck(bool chk){
+   inline void setAuthentificationCallback(bool chk){
        this->ssl_check = chk;
    }
 

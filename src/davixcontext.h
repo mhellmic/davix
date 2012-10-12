@@ -28,15 +28,6 @@ public:
     /// this context need to be destroyed after usage
     Context* clone();
 
-    /// POSIX-like gate
-    /// provide the File POSIX-oriented operations
-    /// this gate need to be before the destruction of its context
-    PosixGate & posixGate();
-
-
-    /// standard plain Http request Gate
-    /// provide the Http
-    HttpGate& httpGate();
 
 protected:
     // internal context

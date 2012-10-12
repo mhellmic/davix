@@ -21,11 +21,11 @@ public:
     virtual ~NGQHttpRequest(){};
 
    ///
-   ///   add a personalized header to the header request
+   ///  add a personalized header to the header request
    ///  replace an existing one if already exist
-   ///   remove one if empty
-   ///   @param field : add a header field to the current http request or replace a existing one
-   ///   @param value : value of the field to set
+   ///  remove one if empty
+   ///  @param field : add a header field to the current http request or replace a existing one
+   ///  @param value : value of the field to set
     virtual void addHeaderField(const std::string & field, const std::string & value)=0;
 
 

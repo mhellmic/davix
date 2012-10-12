@@ -63,7 +63,7 @@ int davix_params_set_auth_callback(davix_params_t params, davix_auth_callback ca
     int ret = -1;
     try{
         Davix::RequestParams* p = (Davix::RequestParams*)(params);
-        p->set_authentification_controller(userdata, call);
+        p->setAuthentificationCallback(userdata, call);
         ret = 0;
     }catch(Glib::Error & e){
         if(err)
@@ -80,7 +80,7 @@ int davix_params_set_ssl_check(davix_params_t params, gboolean ssl_check, GError
     int ret = -1;
     try{
         Davix::RequestParams* p = (Davix::RequestParams*)(params);
-        p->set_ssl_ca_check(ssl_check);
+        p->setSSLCAcheck(ssl_check);
         ret = 0;
     }catch(Glib::Error & e){
         if(err)

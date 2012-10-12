@@ -25,24 +25,4 @@ Context* Context::clone(){
 }
 
 
-PosixGate& Context::posixGate(){
-    if(p_gate.get() == NULL){
-        Glib::Mutex::Lock l(mux_gate);
-        if(p_gate.get() == NULL){
-            p_gate.reset(new PosixGate(this));
-        }
-    }
-    return *(p_gate);
-}
-
-HttpGate& Context::httpGate(){
-    if(h_gate.get() == NULL){
-        Glib::Mutex::Lock l(mux_gate);
-        if(h_gate.get() == NULL){
-            h_gate.reset(new HttpGate(this));
-        }
-    }
-    return *(h_gate);
-}
-
 }

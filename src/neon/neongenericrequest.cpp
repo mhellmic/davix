@@ -42,9 +42,9 @@ void NeonGenericRequest::configure_sess(ne_session* sess){
 }
 
 
-NeonRequestStatus* NeonGenericRequest::executeRequest(){
+NeonRequestResult* NeonGenericRequest::executeRequest(){
     // create and configure session
-    NeonRequestStatus* res = new NeonRequestStatus(context, this);
+    NeonRequestResult* res = new NeonRequestResult(context, this);
     res->code = StatusCode::UnknowError;
 
     ne_session * ne_sess_ptr=NULL;

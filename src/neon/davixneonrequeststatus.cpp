@@ -3,7 +3,7 @@
 
 namespace Davix {
 
-NeonRequestStatus::NeonRequestStatus(Context* context, NeonGenericRequest* request) : DavStatusRequest(context, request)
+NeonRequestResult::NeonRequestResult(Context* context, NeonGenericRequest* request) : DavStatusRequest(context, request)
 {
 
 }

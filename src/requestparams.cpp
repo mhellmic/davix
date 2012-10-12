@@ -23,23 +23,23 @@ RequestParams::~RequestParams(){
 }
 
 //
-void RequestParams::set_ssl_ca_check(bool chk){
+void RequestParams::setSSLCAcheck(bool chk){
     ssl_check = chk;
 }
 
 //
-void RequestParams::set_authentification_controller(void * _userdata, davix_auth_callback _call){
+void RequestParams::setAuthentificationCallback(void * _userdata, davix_auth_callback _call){
     call = _call;
     userdata = _userdata;
 }
 
 //
-void RequestParams::set_connexion_timeout(unsigned long timeout){ // throw nothing
+void RequestParams::setConnexionTimeout(unsigned long timeout){ // throw nothing
     connexion_timeout = timeout;
 }
 
 //
-void RequestParams::set_operation_timeout(unsigned long timeout){ // throw nothing
+void RequestParams::setOperationTimeout(unsigned long timeout){ // throw nothing
     ops_timeout = timeout;
 }
 

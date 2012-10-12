@@ -12,10 +12,10 @@ namespace Davix {
 class Context;
 class NeonGenericRequest;
 
-class NeonRequestStatus : public DavStatusRequest
+class NeonRequestResult : public DavStatusRequest
 {
 public:
-    NeonRequestStatus(Context* context, NeonGenericRequest* request);
+    NeonRequestResult(Context* context, NeonGenericRequest* request);
 
 private:
     ne_session *    _sess;

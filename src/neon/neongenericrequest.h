@@ -14,7 +14,7 @@ typedef std::vector<HeaderField>  HeaderFieldVec;
 
 namespace Davix {
 
-class NeonRequestStatus;
+class NeonRequestResult;
 
 class NeonGenericRequest : public NGQHttpRequest
 {
@@ -23,7 +23,7 @@ public:
 
     virtual void addHeaderField(const std::string &field, const std::string &value);
 
-    virtual NeonRequestStatus* executeRequest();
+    virtual NeonRequestResult* executeRequest();
 
 protected:
     HeaderFieldVec _headers;
