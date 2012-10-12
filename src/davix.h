@@ -96,18 +96,36 @@ int davix_set_login_passwd_auth(davix_auth_t token, const char* login, const cha
 
 
 /**
-  @brief execute a POSIX stat query on a given url, required webdav endpoint
+  @brief execute a POSIX stat query on a given WebDav URI
 
   POSIX-like operation,
 
   POSIX stat request on a given webdav endpoint
   @param sess : davix session handle
+  @param params : request parameters, OPTIONAL
   @param url: url of the webdav point
   @param st : stat structure
   @param err : GError error handling system
   @return 0 if success else -1
 */
 int davix_stat(davix_sess_t sess, davix_params_t params, const char* url, struct stat * st, GError** err);
+
+
+
+/**
+  @brief execute a POSIX mkdir query on a given WebDav URI
+
+  POSIX-like operation,
+
+  POSIX mkdir request on a given webdav endpoint
+  @param sess : davix session handle
+  @param params : request parameters, OPTIONAL
+  @param url: url of the folder to create
+  @param right: remote file right
+  @param err : GError error handling system
+  @return 0 if success else -1
+*/
+int davix_mkdir(davix_sess_t sess, davix_params_t _params, const char* url,  mode_t right, GError** err);
 
 
 

@@ -38,4 +38,30 @@ void DavPosix::mkdir(const RequestParams * _params, const std::string &url, mode
     davix_log_debug(" davix_mkdir <-");
 }
 
+
+
+
+DAVIX_C_DECL_BEGIN
+
+int davix_mkdir(davix_sess_t sess, davix_params_t _params, const char* url,  mode_t right, GError** err){
+    g_return_val_if_fail(sess != NULL && url != NULL,-1);
+
+    try{
+        Davix::DavPosix p(static_cast<Davix::Context*>(sess));
+        Davix::RequestParams * params = (Davix::RequestParams*) (_params);
+
+        p.mkdir(params,url, right);
+        return 0;
+    }catch(Glib::Error & e){
+        if(err)
+            *err= g_error_copy(e.gobj());
+    }catch(std::exception & e){
+        g_set_error(err, g_quark_from_string("davix_stat"), EINVAL, "unexcepted error %s", e.what());
+    }
+    return -1;
+}
+
+DAVIX_C_DECL_END
+
+
 }
