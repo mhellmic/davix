@@ -19,10 +19,7 @@
   - Third party transfer
  */
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+DAVIX_C_DECL_BEGIN
 
 /**
   @brief create a new davix session handle
@@ -126,8 +123,6 @@ int davix_stat(davix_sess_t sess, const char* url, struct stat * st, GError** er
 */
 //int davix_set_ssl_check(davix_sess_t sess, gboolean ssl_check, GError** err);
 
-#ifdef __cplusplus
-}
-#endif
+DAVIX_C_DECL_END
 
 #endif // DAVIX_H

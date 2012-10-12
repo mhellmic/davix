@@ -14,7 +14,7 @@ CoreInterface* davix_context_create(){
 
 }
 
-extern "C"{
+DAVIX_C_DECL_BEGIN
 
 // initialization
 __attribute__((constructor))
@@ -130,6 +130,6 @@ void davix_params_free(davix_params_t p){
 }
 
 
-}
+DAVIX_C_DECL_END
 
 
