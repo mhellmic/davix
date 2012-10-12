@@ -103,7 +103,7 @@ davix_params_t davix_params_copy(davix_params_t p){
 
 void davix_params_free(davix_params_t p){
     if(p){
-        delete (Davix::RequestParams*) p;
+        delete ((Davix::RequestParams*) p);
     }
 }
 

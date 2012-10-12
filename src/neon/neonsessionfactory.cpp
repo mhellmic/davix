@@ -56,6 +56,7 @@ int NEONSessionFactory::createNeonSession(const Uri & uri, ne_session** sess){
 
 int NEONSessionFactory::storeNeonSession(const Uri & uri, ne_session* sess){
     internal_release_session_handle(sess);
+    return 0;
 }
 
 

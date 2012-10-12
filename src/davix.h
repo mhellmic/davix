@@ -107,7 +107,7 @@ int davix_set_login_passwd_auth(davix_auth_t token, const char* login, const cha
   @param err : GError error handling system
   @return 0 if success else -1
 */
-int davix_stat(davix_sess_t sess, const char* url, struct stat * st, GError** err);
+int davix_stat(davix_sess_t sess, davix_params_t params, const char* url, struct stat * st, GError** err);
 
 
 
