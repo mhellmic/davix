@@ -7,10 +7,12 @@ FILE(GLOB src_neon "neon/*.cpp")
 FILE(GLOB src_logger "logging/*.c")
 FILE(GLOB src_davix_posix "posix/*.cpp")
 
-LIST(APPEND davix_headers "davix.h" "davix_types.h" "coreinterface.hpp" "global_def.hpp"
-            "libdavix_object.hpp" "abstractsessionfactory.hpp" "requestparams.hpp" "request.hpp" "httprequest.hpp" "davix_cpp.hpp")
+LIST(APPEND davix_headers "davix.h" "davix_types.h" "davixcontext.hpp" "global_def.hpp"
+            "abstractsessionfactory.hpp" "davixrequestparams.hpp" "request.hpp" "httprequest.hpp" "davix_cpp.hpp")
 
 LIST(APPEND davix_logger_header "logging/logger.h")
+
+LIST(APPEND davix_posix_header "posix/davix_posix.h" "posix/davposix.hpp")
 
 include_directories("libs")
 
@@ -66,3 +68,6 @@ install( FILES ${davix_headers}
 
 install( FILES ${davix_logger_header}
          DESTINATION ${INCLUDE_INSTALL_DIR}/davix/logging)
+
+install( FILES ${davix_posix_header}
+         DESTINATION ${INCLUDE_INSTALL_DIR}/davix/posix)

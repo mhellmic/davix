@@ -80,6 +80,7 @@ make DESTDIR=%{buildroot} install
 %files devel
 %defattr (-,root,root)
 %{_libdir}/libdavix.so
+%dir %{_includedir}/davix
 %{_includedir}/davix/*
 %{_libdir}/pkgconfig/*
 
