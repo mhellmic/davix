@@ -15,6 +15,8 @@ class ContextInternal
 public:
     ContextInternal(AbstractSessionFactory * fsess);
 
+    virtual ~ContextInternal(){}
+
     /**
       implementation of getSessionFactory
     */

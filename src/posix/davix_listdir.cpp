@@ -1,5 +1,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
+#include <ostream>
+#include <sstream>
 
 #include "davix_listdir.hpp"
 #include <posix/davposix.hpp>
