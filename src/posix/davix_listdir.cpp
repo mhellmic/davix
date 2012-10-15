@@ -213,3 +213,79 @@ void DavPosix::closedir(DAVIX_DIR * d){
 }
 
 } // namespace Davix
+
+
+
+
+
+
+
+
+
+
+
+
+
+DAVIX_C_DECL_BEGIN
+
+DAVIX_DIR* davix_posix_opendir(davix_sess_t sess, davix_params_t _params, const char* url, GError** err){
+    g_return_val_if_fail(sess != NULL, NULL);
+
+    try{
+        Davix::DavPosix p(static_cast<Davix::Context*>(sess));
+        Davix::RequestParams * params = (Davix::RequestParams*) (_params);
+
+        return p.opendir(params,url);
+    }catch(Glib::Error & e){
+        if(err)
+            *err= g_error_copy(e.gobj());
+    }catch(std::exception & e){
+        g_set_error(err, g_quark_from_string("davix_opendir"), EINVAL, "unexcepted error %s", e.what());
+    }
+    return NULL;
+}
+
+
+
+int davix_posix_closedir(davix_sess_t sess, DAVIX_DIR* d, GError** err){
+    g_return_val_if_fail(sess != NULL,-1);
+
+    try{
+        Davix::DavPosix p(static_cast<Davix::Context*>(sess));
+
+        if(d){
+            p.closedir(d);
+            return 0;
+        }
+    }catch(Glib::Error & e){
+        if(err)
+            *err= g_error_copy(e.gobj());
+    }catch(std::exception & e){
+        g_set_error(err, g_quark_from_string("davix_readdir"), EINVAL, "unexcepted error %s", e.what());
+    }
+    return -1;
+}
+
+
+struct dirent* davix_posix_readdir(davix_sess_t sess, DAVIX_DIR* d, GError** err){
+    g_return_val_if_fail(sess != NULL,NULL);
+
+    try{
+        Davix::DavPosix p(static_cast<Davix::Context*>(sess));
+
+        if(d){
+            return p.readdir(d);
+        }
+    }catch(Glib::Error & e){
+        if(err)
+            *err= g_error_copy(e.gobj());
+    }catch(std::exception & e){
+        g_set_error(err, g_quark_from_string("davix_closedir"), EINVAL, "unexcepted error %s", e.what());
+    }
+    return NULL;
+}
+
+DAVIX_C_DECL_END
+
+
+
