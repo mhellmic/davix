@@ -61,7 +61,7 @@ int main(int argc, char** argv){
 
 
     if(!tmp_err)
-        res = davix_stat(ctxt, p, argv[1], &st, &tmp_err);
+        res = davix_posix_stat(ctxt, p, argv[1], &st, &tmp_err);
 
 
     if(res == 0){

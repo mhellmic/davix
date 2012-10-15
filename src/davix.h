@@ -5,7 +5,10 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
 #include <davix_types.h>
+
+
 
 /**
   @file davix.h
@@ -19,6 +22,12 @@
   - Third party transfer
  */
 
+
+//
+// Davix POSIX-like API
+//
+#include <posix/davix_posix.h>
+
 DAVIX_C_DECL_BEGIN
 
 /**
@@ -26,14 +35,11 @@ DAVIX_C_DECL_BEGIN
 
   create a davix sessions handle, session handle can be used to configure and execute davix request
   @param err : Gerror error report system, in case of failure
-  @return davix_sess_t : session handle or NULL poitner if error
+  @return davix_sess_t : session handle or NULL pointer if error
   */
 davix_sess_t davix_context_new(GError ** err);
 
-/**
-  enable/disable grid mode, grid mode enable GSI/voms usage and credential delegation
 
-*/
 
 /**
   release a davix session handle
@@ -88,44 +94,6 @@ int davix_set_pkcs12_auth(davix_auth_t token, const char* filename_pkcs, const c
 
 int davix_set_login_passwd_auth(davix_auth_t token, const char* login, const char* passwd, GError** err);
 
-
-//
-// POSIX like API
-// Need Webdav support
-//
-
-
-/**
-  @brief execute a POSIX stat query on a given WebDav URI
-
-  POSIX-like operation,
-
-  POSIX stat request on a given webdav endpoint
-  @param sess : davix session handle
-  @param params : request parameters, OPTIONAL
-  @param url: url of the webdav point
-  @param st : stat structure
-  @param err : GError error handling system
-  @return 0 if success else -1
-*/
-int davix_stat(davix_sess_t sess, davix_params_t params, const char* url, struct stat * st, GError** err);
-
-
-
-/**
-  @brief execute a POSIX mkdir query on a given WebDav URI
-
-  POSIX-like operation,
-
-  POSIX mkdir request on a given webdav endpoint
-  @param sess : davix session handle
-  @param params : request parameters, OPTIONAL
-  @param url: url of the folder to create
-  @param right: remote file right
-  @param err : GError error handling system
-  @return 0 if success else -1
-*/
-int davix_mkdir(davix_sess_t sess, davix_params_t _params, const char* url,  mode_t right, GError** err);
 
 
 

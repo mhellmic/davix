@@ -43,7 +43,7 @@ void DavPosix::mkdir(const RequestParams * _params, const std::string &url, mode
 
 DAVIX_C_DECL_BEGIN
 
-int davix_mkdir(davix_sess_t sess, davix_params_t _params, const char* url,  mode_t right, GError** err){
+int davix_posix_mkdir(davix_sess_t sess, davix_params_t _params, const char* url,  mode_t right, GError** err){
     g_return_val_if_fail(sess != NULL && url != NULL,-1);
 
     try{

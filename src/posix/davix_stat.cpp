@@ -68,7 +68,7 @@ const std::vector<char> & req_webdav_propfind(HttpRequest* req){
 
 DAVIX_C_DECL_BEGIN
 
-int davix_stat(davix_sess_t sess, davix_params_t _params, const char* url, struct stat * st, GError** err){
+int davix_posix_stat(davix_sess_t sess, davix_params_t _params, const char* url, struct stat * st, GError** err){
     g_return_val_if_fail(sess != NULL,-1);
 
     try{
