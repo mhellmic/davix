@@ -1,4 +1,8 @@
 #include "davix_mkdir.hpp"
+
+#include <ostream>
+#include <sstream>
+
 #include <global_def.hpp>
 #include <davixcontext.hpp>
 #include <xmlpp/webdavpropparser.hpp>

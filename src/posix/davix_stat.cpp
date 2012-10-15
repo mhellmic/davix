@@ -1,4 +1,7 @@
 #include "davix_stat.hpp"
+
+#include <ostream>
+#include <sstream>
 #include <string>
 #include <cstring>
 #include <xmlpp/webdavpropparser.hpp>
