@@ -2,18 +2,23 @@
 project (davix)
 cmake_minimum_required (VERSION 2.6)
 
-# build type
-set(CMAKE_BUILD_TYPE "RelWithDebInfo"
-    CACHE STRING "build type")
-
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
+option(shared_library "generate shared library" TRUE)
+option(static_library  "generate static library" FALSE)
+
+
+# build type
+if(NOT DEFINED CMAKE_BUILD_TYPE)
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
+endif(NOT DEFINED CMAKE_BUILD_TYPE)
+
 # load module
 include(DefineInstallationPaths REQUIRED)
-include(MacroCopyFile REQUIRED)
 include(ReleaseDebugAutoFlags REQUIRED)
 include(CMakeGeneratePkgConfig REQUIRED)
 include(MacroAddDoxygen REQUIRED)
-
+include(PortabilityGNUCheck REQUIRED)
+include(CMakeCXX11Support REQUIRED)
 find_package(PkgConfig REQUIRED)
 
 #enable testing
@@ -23,7 +28,7 @@ INCLUDE(CTest)
 set(OUTPUT_NAME_DAVIX "davix")
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 0)
-set(VERSION_PATCH 5)
+set(VERSION_PATCH 31)
 set(VERSION_STRING ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 
@@ -31,37 +36,26 @@ set(VERSION_STRING ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 SET(HTTP_LIB "NEON") # http backend can be NEON
 SET(UNIT_TESTS FALSE
     CACHE STRING "enable or disable unit test compilation")
-
+SET(NEON_EMBEDED TRUE
+    CACHE STRING "enable or disable unit test compilation")
 
 # libs checks
-pkg_search_module(GLIBMM_PKG REQUIRED glibmm glibmm-2.6 glibmm-2.4)
-pkg_check_modules(GTHREAD_PKG REQUIRED gthread-2.0)
-
-
-if ( ${HTTP_LIB} STREQUAL "NEON" )
-pkg_check_modules(HTTPLIB_PKG REQUIRED neon)
-endif ( ${HTTP_LIB} STREQUAL "NEON" )
-
-pkg_search_module(LIBXMLPP_PKG REQUIRED libxml++ libxml++-2.6 libxml++-2.4)
+find_package(Threads)
+add_subdirectory(deps)
 
 pkg_check_modules(CRYPTO_PKG REQUIRED libcrypto)
 
-if ( ${HTTP_LIB} STREQUAL "NEON" )
-    add_definitions( -DNEON_BACKEND)
-
-    if("${HTTPLIB_PKG_VERSION}" VERSION_LESS "0.27.0")
-        message(" .... neon version < 0.27 detected : disable session re-use, risk of bug important")
-        add_definitions( -D_DISABLE_SESSION_REUSE)
-        add_definitions( -D_NEON_VERSION_0_25)
-    endif("${HTTPLIB_PKG_VERSION}" VERSION_LESS "0.27.0")
-
-else ( ${HTTP_LIB} STREQUAL "NEON" )
-    add_definitions( -DCURL_BACKEND)
-endif ( ${HTTP_LIB} STREQUAL "NEON" )
 
 
-include_directories(${GLIBMM_PKG_INCLUDE_DIRS} ${HTTPLIB_PKG_INCLUDE_DIRS})
-include_directories(${LIBXMLPP_PKG_INCLUDE_DIRS})
+
+## general defs
+add_definitions( -D_GNU_SOURCE)
+add_definitions( -DNEON_BACKEND)
+add_definitions( -D__DAVIX_INSIDE__)
+add_definitions( -DDAVIX_VERSION="${VERSION_STRING}" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG_ENABLE}")
+
+include_directories( ${HTTPLIB_PKG_INCLUDE_DIRS} ${GLIB2_PKG_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/deps)
 
 install(FILES RELEASE-NOTES
 		DESTINATION ${DOC_INSTALL_DIR}/) # install release notes
@@ -69,6 +63,7 @@ install(FILES RELEASE-NOTES
 add_subdirectory (src)
 add_subdirectory (doc)
 add_subdirectory (test)
+add_subdirectory (packaging)
 
 
 #######################################################

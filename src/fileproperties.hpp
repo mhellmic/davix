@@ -1,15 +1,21 @@
 #ifndef DAVIX_FILEPROPERTIES_H
 #define DAVIX_FILEPROPERTIES_H
 
-#include "global_def.hpp"
-#include <glibmm.h>
+#include <config.h>
+#include <string>
+#include <vector>
+
 
 namespace Davix {
 
+
+typedef std::vector<std::string> RawReplicasVec;
+
 struct FileProperties
 {
-
-    Glib::ustring  filename;
+    FileProperties();
+    std::string filename;
+    RawReplicasVec raw_reps;
     unsigned int  req_status; /* status code of the request associated ( ex: http 200) */
 
     nlink_t   nlink;
@@ -25,6 +31,8 @@ struct FileProperties
     inline void clear(){
         nlink = req_status =  gid = uid = size =0;
         mode = atime = mtime = ctime = 0;
+        filename=std::string();
+
     }
 
 };

@@ -3,24 +3,37 @@
 
 #include <vector>
 #include <utility>
+#include <memory>
+#include <string>
 #include <queue>
-#include <neon/ne_request.h>
-#include <neon/ne_auth.h>
+#include <ne_request.h>
+#include <ne_auth.h>
 #include <neon/neonsessionfactory.hpp>
+#include <memory/memoryutils.hpp>
 
-#include <global_def.hpp>
-#include <httprequest.hpp>
+ 
+#include <request/httprequest.hpp>
+#include <neon/neonsession.hpp>
 
 namespace Davix {
 
 #define NEON_BUFFER_SIZE 65000
 
 class NEONSessionFactory;
+class NEONSession;
 
-class NEONRequest : public HttpRequest
+
+struct ContentProviderContext {
+    ContentProviderContext(): callback(NULL), udata(NULL) {}
+    HttpBodyProvider callback;
+    void *udata;
+};
+
+
+class NEONRequest
 {
 public:
-    NEONRequest(NEONSessionFactory* f, ne_session * sess,  const std::string & path);
+    NEONRequest(NEONSessionFactory& f, const Uri & uri_req);
     virtual ~NEONRequest();
 
     /**
@@ -31,102 +44,155 @@ public:
       @param value : value of the field to set
 
     */
-    virtual void addHeaderField(const std::string & field, const std::string & value);
+    void addHeaderField(const std::string & field, const std::string & value){
+        _headers_field.push_back(std::pair<std::string, std::string> (field, value));
+    }
+
     /**
      * set the request command to execute ( GET, POST, PUT, PROPFIND )
      */
-    virtual void setRequestMethod(const std::string & request_str);
+    void setRequestMethod(const std::string & request_str){
+        _request_type = request_str;
+    }
 
-    /**
-      Execute the given request and return result to the buffer result
-      Execute the constructed query, throw an exception if an error occures
-      @return 0 on success
-      @throw Glib::Error : error string and protocol error code
-     */
-    virtual int execute_sync() ; // throw(Glib::Error)
+    void setParameters(const RequestParams &p ){
+        params = p;
+    }
 
-    virtual void add_full_request_content(const std::string & body);
 
-    virtual void execute_block();
+    //  Execute the given request and return result to the buffer result
+    //  @return 0 on success
+    int executeRequest(DavixError** err) ;
+
+    void setRequestBodyString(const std::string & body);
+
+    void setRequestBodyBuffer(const void * buffer, size_t len);
+
+    void setRequestBodyFileDescriptor(int fd, off_t offset, size_t len);
+
+    void setRequestBodyCallback(HttpBodyProvider provider, size_t len, void* udata);
+
+    int beginRequest(DavixError** err);
     /**
       read a block of a maximum size bytes in the request
       @param buffer : buffer to fill
       @param max_size : maximum number of bytes to set
-      @throw Glib::Error
     */
-    virtual ssize_t read_block(char* buffer, size_t max_size);
+    ssize_t readBlock(char* buffer, size_t max_size,DavixError** err);
+
+
+    ssize_t readLine(char* buffer, size_t max_size, DavixError** err);
+
     /**
       finish an already started request
      */
-    virtual void finish_block();
+    int endRequest(DavixError** err);
     /**
       get a reference to the current result for synchronous full request
      */
-    virtual const std::vector<char> & get_result();
+    const char* getAnswerContent();
+    /**
+     * get content length
+     **/
+    ssize_t getAnswerSize() const;
+
     /**
       clear the current result
     */
-    virtual void clear_result();
+    void clearAnswerContent();
+
+    void useCacheToken(const HttpCacheToken * c){
+       _cache_info.reset((c)?(new HttpCacheToken(*c)):NULL);
+    }
+
+    HttpCacheToken* extractCacheToken() const;
+    //ake
+
+    int getRequestCode();
+
+    bool getAnswerHeader(const std::string &header_name, std::string &value) const;
 
 
+    // auth method support
+    int do_pkcs12_cert_authentification(const char * filename_pkcs12, const char* passwd, DavixError** err);
+    int do_login_passwd_authentification(const char *login, const char *passwd, DavixError** err);
 
-    /**
-      return the current request code error
-       ex : HTTP 200
-     */
-    virtual int getRequestCode();
+private:
 
-    /**
-      reimplement authentification
-    */
-    virtual void try_set_pkcs12_cert(const char * filename_pkcs12, const char* passwd);
-    virtual void try_set_login_passwd(const char *login, const char *passwd);
+    // request parameters
+    RequestParams params;
+    // cache parameters
+    ScopedPtr<HttpCacheToken>::type _cache_info;
+    // neon internal field
+    ScopedPtr<NEONSession>::type _neon_sess;
 
-protected:
-    ne_session *    _sess;
     ne_request * _req;
-    std::string  _path;
+    Uri  _current, _orig;
+    // read info
+    dav_ssize_t _last_read;
+
     std::vector<char> _vec;
+
+    // request content;
+    char* _content_ptr;
+    size_t _content_len;
+    off_t _content_offset;
     std::string _content_body;
+    int _fd_content;
+    ContentProviderContext _content_provider;
+
+    // answer length
+    mutable dav_ssize_t _ans_size;
+    // Request string
     std::string _request_type;
-    NEONSessionFactory* _f;
+    NEONSessionFactory& _f;
     bool req_started, req_running;
+    int _last_request_flag;
 
     std::vector< std::pair<std::string, std::string > > _headers_field;
 
-    /** temporary field used for login/password authentification
-     */
-    std::string _passwd, _login;
+    ////////////////////////////////////////////
+    // Private Members
+    ssize_t getAnswerSizeFromHeaders() const;
 
-    void configure_sess();
+    int startRequest(DavixError** err);
+
+    int processRedirection(int neonCode, DavixError** err); // analyze and process redirection if needed
+
+    void reqReset();
+
+    int pick_sess(DavixError** err);
     void configure_req();
 
-    void create_req();
+    // create initial neon request object
+    int create_req(DavixError** err);
 
-    void negotiate_request();
+    // negociate the request : authentification, redirection, name resolution
+    int negotiate_request(DavixError** err);
+
+    // redirection logic
+    int redirect_request(DavixError** err);
 
     void free_request();
     /**
       internal, try to authentification with pkcs12 credential
     */
-    int try_pkcs12_authentification(ne_session *sess, const ne_ssl_dname *const *dnames);
+    int try_pkcs12_authentification(ne_session *sess, const ne_ssl_dname *const *dnames, DavixError** err);
 
+    NEONRequest(const NEONRequest & req);
+    NEONRequest & operator=(const NEONRequest & req);
 
-    /**
-      main libneon callback for clicert
-     */
-    static void provide_clicert_fn(void *userdata, ne_session *sess,
-                              const ne_ssl_dname *const *dnames,
-                              int dncount);
-    static int provide_login_passwd_fn(void *userdata, const char *realm, int attempt,
-                                char *username, char *password);
 
 };
 
-/**
-  translate a neon function status to a string and a errno code
- */
-std::string  translate_neon_status(int ne_status, ne_session* sess, int* errno_code);
+
+//
+// translate a neon error code to a davix one
+//
+void neon_to_davix_code(int ne_status,ne_session* sess, const std::string & scope, DavixError** err);
+
+
+void neon_simple_req_code_to_davix_code(int ne_status, ne_session* sess, const std::string & scope, DavixError** err);
 
 
 } // namespace Davix

@@ -1,0 +1,114 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// cpp common
+
+
+
+
+// POSIX inclusion
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <pthread.h>
+//
+#include <string.h>
+#include <limits.h>
+//
+#include <errno.h>
+
+// davix parameters
+#define DAVIX_BUFFER_SIZE 2048
+#define DAVIX_READ_BLOCK_SIZE 4096
+
+/// default connexion timeout for HTTP/Dav connexion ( 0 : def value of the library )
+#define DAVIX_DEFAULT_CONN_TIMEOUT 180
+/// default timeout on operations for HTTP/Webdav ( 0 : def value of the library )
+#define DAVIX_DEFAULT_OPS_TIMEOUT 0
+
+// c++11
+
+#cmakedefine HAVE_CXX011_FULL_SUPPORT 1
+#cmakedefine HAVE_CXX011_PARTIAL_SUPPORT 1
+
+#ifdef __cplusplus
+
+#if (defined HAVE_CXX011_FULL_SUPPORT) || (defined HAVE_CXX011_PARTIAL_SUPPORT)
+#   include <array>
+#   include <iostream>
+
+#   define stdx11 std;
+#else
+#   include <tr1/array>
+#   define stdx11 std::tr1;
+#endif
+
+#endif
+
+// default export
+#undef DAVIX_EXPORT
+#define DAVIX_EXPORT
+
+// has unistd
+#cmakedefine HAVE_UNISTD_H 1
+
+// has strtok
+#cmakedefine HAVE_STRTOK_R
+#cmakedefine HAVE_STRTOK_S
+
+
+// has locale
+#cmakedefine HAVE_LOCALE_H 1
+
+// has strptime
+#cmakedefine HAVE_STRPTIME_H 1
+#ifndef HAVE_STRPTIME_H
+#	define strptime __strptime
+#endif
+
+// has mempcpy
+#cmakedefine HAVE_MEMPCPY_H 1
+#include <mempcpy/mempcpy.h>
+
+// has strlcpy
+#cmakedefine HAVE_STRLCPY_H 1
+#include <strlcpy/strlcpy.h>
+
+// readdir max name size
+#ifndef NAME_MAX
+#define NAME_MAX 256
+#endif
+
+// termios
+#cmakedefine HAVE_TERMIOS_H 1
+
+// getconsolemode
+#cmakedefine HAVE_SETCONSOLEMODE 1
+
+//
+// Win 32 mapper
+#if( defined _WIN32 )|| ( defined __MINGW32__ )
+// macros
+
+#define __PLATFORM_WINDOWS__
+
+// stat struct def
+typedef short nlink_t;
+typedef short gid_t;
+typedef short uid_t;
+
+#undef DAVIX_EXPORT
+#if defined(libdavix_EXPORTS)
+#define  DAVIX_EXPORT __declspec(dllexport)
+#else
+#define  DAVIX_EXPORT __declspec(dllimport)
+#endif /* libdavix_EXPORTS */
+
+// windows headers
+#include <Windows.h>
+#include <Winnls.h>
+#endif /* end of win32*/
+
+
+
+#endif // CONFIG_H

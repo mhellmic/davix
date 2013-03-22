@@ -1,7 +1,6 @@
 #include "test_request.h"
 
-#include <davixcontext.hpp>
-#include <neon/neonsessionfactory.hpp>
+#include <davix.hpp>
 
 using namespace Davix;
 
@@ -11,21 +10,18 @@ int main(int argc, char** argv){
         return 0;
     }
 
+    DavixError* tmp_err=NULL;
+    Context c;
+    HttpRequest r(c, argv[1], &tmp_err);
 
-    try{
-        std::auto_ptr<AbstractSessionFactory> s( new NEONSessionFactory());
-
-        std::auto_ptr<Request> r(s->create_request(argv[1]));
-        r->execute_sync();
-        std::vector<char> v = r->get_result();
-        v.push_back('\0');
-        std::cout << "content "<< (char*) &(v.at(0)) << std::endl;
-    }catch(Glib::Error & e){
-        std::cout << " error occures : N°" << e.code() << "  " << e.what() << std::endl;
-        return -1;
-    }catch(std::exception & e){
-        std::cout << " error occures :" << e.what() << std::endl;
-        return -1;
+    if(!tmp_err)
+        r.executeRequest(&tmp_err);
+    if(tmp_err){
+        std::cerr << " error in request : " << tmp_err->getErrMsg() << std::endl;
+    }else{
+        std::string v(r.getAnswerContent(), r.getAnswerSize());
+        std::cout << "content "<< v << std::endl;
     }
+
     return 0;
 }

@@ -23,7 +23,7 @@ PROJECT_NAME           = "davix"
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = 2.0.1
+PROJECT_NUMBER         = @VERSION_STRING@
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -459,7 +459,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../src/ 
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../src/  @CMAKE_CURRENT_SOURCE_DIR@/src/
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -468,7 +468,7 @@ INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../src/
 # *.c *.cc *.cxx *.cpp *.c++ *.java *.ii *.ixx *.ipp *.i++ *.inl *.h *.hh *.hxx 
 # *.hpp *.h++ *.idl *.odl *.cs *.php *.php3 *.inc *.m *.mm *.py
 
-FILE_PATTERNS          = *.c *.h *.cpp *.hpp
+FILE_PATTERNS          =  *.hpp
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories 
 # should be searched for input files as well. Possible values are YES and NO. 
@@ -480,7 +480,10 @@ RECURSIVE              = YES
 # excluded from the INPUT source files. This way you can easily exclude a 
 # subdirectory from a directory tree whose root is specified with the INPUT tag.
 
-EXCLUDE                = 
+EXCLUDE                = @CMAKE_CURRENT_SOURCE_DIR@/../src/fileops/ \
+ @CMAKE_CURRENT_SOURCE_DIR@/../src/fileproperties.hpp  @CMAKE_CURRENT_SOURCE_DIR@/../src/xml  \
+ @CMAKE_CURRENT_SOURCE_DIR@/../src/tools  @CMAKE_CURRENT_SOURCE_DIR@/../src/libs \
+  @CMAKE_CURRENT_SOURCE_DIR@/../src/abstractsessionfactory.hpp
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 
@@ -494,7 +497,7 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories 
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = *.man 
+EXCLUDE_PATTERNS       = *.man *internal* *neon*
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or 
 # directories that contain example code fragments that are included (see 

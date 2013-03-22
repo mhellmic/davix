@@ -1,23 +1,14 @@
 #include "test_propfind.h"
 
 
-#include <davixcontext.hpp>
-#include <http_backend.hpp>
+#include <davix.hpp>
+#include <fileops/davmeta.hpp>
+#include <memory>
 #include <posix/davix_stat.hpp>
+#include "davix_test_lib.h"
 
 using namespace Davix;
 
-
-int mycred_auth_callback(davix_auth_t token, const davix_auth_info_t* t, void* userdata, GError** err){
-    GError * tmp_err=NULL;
-    int ret = davix_set_pkcs12_auth(token, (const char*)userdata, (const char*)NULL, &tmp_err);
-    if(ret != 0){
-        fprintf(stderr, " FATAL authentification Error : %s", tmp_err->message);
-        g_propagate_error(err, tmp_err);
-    }
-
-    return ret;
-}
 
 
 
@@ -27,26 +18,25 @@ int main(int argc, char** argv){
         return 0;
     }
 
-    g_logger_set_globalfilter(G_LOG_LEVEL_MASK);
-    try{
-        RequestParams params;
+    davix_set_log_level(DAVIX_LOG_ALL);
+    RequestParams params;
+    DavixError* tmp_err=NULL;
 
-        std::auto_ptr<AbstractSessionFactory> s( new NEONSessionFactory());
-        if(argc >2 ){ // setup ops if credential is found
-             params.setSSLCAcheck(false);
-        }
-        std::auto_ptr<HttpRequest> r (static_cast<HttpRequest*>(s->create_request(argv[1])));
-        r->set_parameters(params);
+    Context c;
+    if(argc >2 ){ // setup ops if credential is found
+         params.setSSLCAcheck(false);
+    }
+    std::auto_ptr<HttpRequest> r (static_cast<HttpRequest*>(c.createRequest( argv[1], &tmp_err)));
+    if(r.get() != NULL){
+        r->setParameters(params);
+        r->addHeaderField("Depth", "1");
 
-        std::vector<char> v = req_webdav_propfind(r.get());
-        v.push_back('\0');
-        std::cout << "content "<< (char*) &(v.at(0)) << std::endl;
-    }catch(Glib::Error & e){
-        std::cout << " error occures : N°" << e.code() << "  " << e.what() << std::endl;
-        return -1;
-    }catch(std::exception & e){
-        std::cout << " error occures :" << e.what() << std::endl;
-        return -1;
+        std::string v(Meta::req_webdav_propfind(r.get(), &tmp_err));
+
+        std::cout << "content "<< v << std::endl;
+    }
+    if(tmp_err){
+        std::cerr << " req error " << tmp_err->getErrMsg() << std::endl;
     }
     return 0;
 }

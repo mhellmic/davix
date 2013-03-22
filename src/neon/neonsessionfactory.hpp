@@ -1,14 +1,17 @@
 #ifndef DAVIX_NEONSESSIONFACTORY_H
 #define DAVIX_NEONSESSIONFACTORY_H
 
-#include <abstractsessionfactory.hpp>
+#include <map>
 #include <davixuri.hpp>
-#include <global_def.hpp>
+ 
 #include <neon/neonrequest.hpp>
+#include <libs/lockers/dpplocker.hpp>
 
 namespace Davix {
 
-class NEONSessionFactory : public AbstractSessionFactory
+class HttpRequest;
+
+class NEONSessionFactory
 {
     friend class NEONRequest;
 public:
@@ -16,32 +19,18 @@ public:
     virtual ~NEONSessionFactory();
 
     /**
-      Take the ownership on a request object in order to execute a query
-      @param typ : type of the request
-      @param url : path of the request
-      @return Request object
-    */
-    virtual Request* create_request(const std::string & url) ;
-
-    /**
       Create a session object or create a recycled  one ( session reuse )
     */
-    int createNeonSession(const Uri & uri, ne_session** sess);
+    int createNeonSession(const Uri & uri, ne_session** sess, DavixError** err);
 
     /**
       store a Neon session object for session reuse purpose
     */
-    int storeNeonSession(const Uri & uri, ne_session *sess);
-
-    /**
-        release the ownership on a request object
-     */
-    virtual void delete_request(Request * req);
-
+    int storeNeonSession(ne_session *sess, DavixError** err);
 
 private:
     std::multimap<std::string, ne_session*> _sess_map;
-    Glib::Mutex _sess_mut;
+    DppLock _sess_mut;
 
     void internal_release_session_handle(ne_session* sess);
 
