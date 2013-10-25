@@ -33,7 +33,7 @@ std::string davix_delegate(const std::string &urlpp,
   Davix::X509Credential credentials;
 
   if (!x509callback.first) {
-      Davix::DavixError::setupError(err, COPY_SCOPE, DAVIX_STATUS_CREDENTIAL_NOT_FOUND,
+      Davix::DavixError::setupError(err, COPY_SCOPE, StatusCode::CredentialNotFound,
                                     "No callback set for getting credentials. Can not delegate");
       return "";
   }
@@ -45,7 +45,7 @@ std::string davix_delegate(const std::string &urlpp,
 
   std::string ucert, ukey, passwd;
   if (!X509CredentialExtra::get_x509_info(credentials, &ucert, &ukey, &passwd)) {
-      DavixError::setupError(err, COPY_SCOPE, DAVIX_STATUS_DELEGATION_ERROR,
+      DavixError::setupError(err, COPY_SCOPE, StatusCode::DelegationError,
               std::string("Third party copy only supports PEM certificates"));
       return "";
   }
@@ -119,7 +119,7 @@ std::string davix_delegate(const std::string &urlpp,
               err_aux = snprintf(err_buffer, sizeof(err_buffer), "Could not PUT the proxy: ");
               soap_sprint_fault(soap_put, err_buffer + err_aux, sizeof(err_buffer) - err_aux);
 
-              DavixError::setupError(err, COPY_SCOPE, DAVIX_STATUS_DELEGATION_ERROR,
+              DavixError::setupError(err, COPY_SCOPE, StatusCode::DelegationError,
                                      err_buffer);
             }
         }
@@ -127,14 +127,14 @@ std::string davix_delegate(const std::string &urlpp,
           err_aux = snprintf(err_buffer, sizeof(err_buffer), "Connection error on proxy put: ");
           soap_sprint_fault(soap_put, err_buffer + err_aux, sizeof(err_buffer) - err_aux);
 
-          DavixError::setupError(err, COPY_SCOPE, DAVIX_STATUS_DELEGATION_ERROR,
+          DavixError::setupError(err, COPY_SCOPE, StatusCode::DelegationError,
                                  err_buffer);
         }
 
         soap_free(soap_put);
       }
       else {
-        DavixError::setupError(err, COPY_SCOPE, DAVIX_STATUS_DELEGATION_ERROR,
+        DavixError::setupError(err, COPY_SCOPE, StatusCode::DelegationError,
                                std::string("Could not generate the proxy: ") + err_buffer);
       }
     }
@@ -142,14 +142,14 @@ std::string davix_delegate(const std::string &urlpp,
       err_aux = snprintf(err_buffer, sizeof(err_buffer), "Could not get proxy request: ");
       soap_sprint_fault(soap_get, err_buffer + err_aux, sizeof(err_buffer) - err_aux);
 
-      DavixError::setupError(err, COPY_SCOPE, DAVIX_STATUS_DELEGATION_ERROR,
+      DavixError::setupError(err, COPY_SCOPE, StatusCode::DelegationError,
                              std::string("Could not get the delegation id: ") + err_buffer);
     }
   }
   else { // soap_get ssl error
     err_aux = snprintf(err_buffer, sizeof(err_buffer), "Could not connect to get the proxy request: ");
     soap_sprint_fault(soap_get, err_buffer + err_aux, sizeof(err_buffer) - err_aux);
-    DavixError::setupError(err, COPY_SCOPE, DAVIX_STATUS_DELEGATION_ERROR,
+    DavixError::setupError(err, COPY_SCOPE, StatusCode::DelegationError,
                            std::string("Could not connect to the delegation endpoint: ") + err_buffer);
   }
 

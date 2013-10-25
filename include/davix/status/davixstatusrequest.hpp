@@ -109,6 +109,15 @@ enum Code {
     /// Impossible to decrypt client credential for usage
     CredDecryptionError = 0x019,
 
+    /// Right delegation Error ( 3rd party copy specific )
+    DelegationError = 0x01a,
+
+    /// File transfert Error ( COPY method )
+    TransferError = 0x01b,
+
+    /// Operation canceled
+    CanceledOperation = 0x10c,
+
     /// Undefined error
     UnknowError = 0x100
 
