@@ -1,0 +1,11 @@
+language: cpp
+compiler:
+  - clang
+  - gcc
+before_install:
+  - sudo apt-get install cmake doxygen
+  - sudo apt-get install libboost-dev libxml2-dev libssl-dev libgtest-dev
+  - sudo bash ./build-gtest.sh
+  - cmake -DGTEST_EXTERNAL=TRUE -DENABLE_THIRD_PARTY_COPY=FALSE -DUNIT_TESTS=TRUE .
+install: make
+script: ctest -V -T Test
